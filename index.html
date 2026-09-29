@@ -226,7 +226,8 @@ body.touch .touch-only{display:block}
 .logo h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(46px,11vw,86px);line-height:.95;letter-spacing:.02em;
   color:var(--gold);-webkit-text-stroke:1px #5a3a08;text-shadow:0 3px 0 #7a5410,0 5px 0 #3a2208,0 10px 18px rgba(0,0,0,.45);text-wrap:balance}
 .logo .hole{position:absolute;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,#0e0905 38%,#6b6b6b 42%,#c9c9c9 52%,transparent 58%)}
-.tagline{text-align:center;font-family:var(--f-tele);font-size:16px;color:#fbecc8;text-shadow:0 1px 2px rgba(0,0,0,.7);margin:6px auto 16px;max-width:36em;text-wrap:balance}
+.tagline{text-align:center;font-family:var(--f-tele);font-size:16px;color:#fbecc8;margin:6px auto 16px;max-width:34em;text-wrap:balance;background:rgba(36,20,8,.78);padding:8px 14px;border-radius:4px}
+body.touch .fine .kb{display:none}
 .rolepick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .rcard{padding:12px 12px 13px;border-radius:4px;text-align:left;display:flex;flex-direction:column;gap:5px;transition:transform .15s}
 .rcard:hover{transform:translateY(-2px)}
@@ -313,7 +314,7 @@ body.touch .touch-only{display:block}
 }
 /* touch layout: thumbs own the bottom corners */
 body.touch .status{bottom:auto;top:calc(var(--safe-t) + 132px)}
-body.touch .roles{left:50%;transform:translateX(-50%);bottom:calc(var(--safe-b) + 10px)}
+body.touch .roles{left:calc(var(--safe-l) + 12px);bottom:calc(var(--safe-b) + 10px)}
 body.touch .bounty{display:none}
 body.touch #pausebtn{left:auto;right:calc(var(--safe-r) + 70px);top:calc(var(--safe-t) + 272px);width:36px;height:36px}
 #stick.ghost{opacity:.35!important}
@@ -330,6 +331,21 @@ body.touch .pl-v{font-size:14px} body.touch .pl-v.big{font-size:18px} body.touch
 body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px} body.touch .bullet::after{top:10px}
 
 @media (prefers-reduced-motion:reduce){ .rcard,.role-btn{transition:none} }
+/* ---- clean HUD: one price, one objective, money + health, stars only when wanted ---- */
+.tk-title,.tape,.clock,.goal,.pl-sub,.purse .bag,.h-label,#tkg{display:none!important}
+.ticker{width:auto!important;min-width:0!important}
+.tk-row{display:flex!important}
+.tk-cell{display:none;min-width:190px}
+.tk-cell.here{display:grid;background:none}
+.tk-spark{height:14px}
+.wanted.off{opacity:0;pointer-events:none} .wanted .w-label{display:none}
+#objective{position:absolute;left:50%;top:calc(var(--safe-t) + 92px);transform:translateX(-50%);max-width:calc(100vw - 24px);text-align:center;pointer-events:none;
+  font-family:var(--f-label);font-weight:800;font-size:19px;letter-spacing:.02em;color:#fff7e0;padding:7px 16px 8px;border-radius:6px;background:rgba(36,20,8,.82);box-shadow:0 4px 14px rgba(0,0,0,.35);white-space:nowrap}
+#objective b{color:var(--gold)} #objective.alert{background:rgba(150,28,18,.9)} #objective .t{font-family:var(--f-tele);font-weight:400;font-size:15px;color:#f3d58a;margin-left:8px}
+#daypill{position:absolute;left:calc(var(--safe-l) + 12px);top:calc(var(--safe-t) + 12px);font-family:var(--f-tele);font-size:13px;color:#fff3cf;background:rgba(36,20,8,.7);padding:4px 10px;border-radius:4px}
+.pl-row-extra{display:none}
+@media (max-width:700px){ #objective{font-size:15px;top:calc(var(--safe-t) + 78px);white-space:normal} #objective .t{font-size:13px} .tk-cell{min-width:160px} body.touch .status{top:auto;bottom:calc(var(--safe-b) + 150px)} body.touch .minimap{top:calc(var(--safe-t) + 130px)} body.touch #pausebtn{top:calc(var(--safe-t) + 12px);right:auto;left:calc(var(--safe-l) + 12px)} #daypill{top:auto;bottom:calc(var(--safe-b) + 118px)} .wanted{top:calc(var(--safe-t) + 132px);right:auto;left:calc(var(--safe-l) + 12px);text-align:left} .wanted .stars{justify-content:flex-start} }
+@media (max-height:520px){ #objective{font-size:14px;top:calc(var(--safe-t) + 70px)} body.touch .status{top:calc(var(--safe-t) + 50px)} #daypill{top:auto;bottom:calc(var(--safe-b) + 10px);left:calc(var(--safe-l) + 12px)} }
 </style>
 </head>
 <body>
@@ -357,8 +373,8 @@ body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px
         <div class="tk-board">
           <div class="tk-title">★ Frontier Bank &amp; Trust Telegraph ★</div>
           <div class="tk-row">
-            <div class="tk-cell" id="tk0"><div class="tk-name"><b>SCS</b> · Silver Creek Savings</div><div class="tk-price num">$0.00</div><div class="tk-chg up"><i class="arr">▲</i><span class="num">0.00</span></div><canvas class="tk-spark"></canvas><div class="tk-flag">RUN</div><div class="tk-flash"></div></div>
-            <div class="tk-cell" id="tk1"><div class="tk-name"><b>RRT</b> · Red Rock Trust</div><div class="tk-price num">$0.00</div><div class="tk-chg up"><i class="arr">▲</i><span class="num">0.00</span></div><canvas class="tk-spark"></canvas><div class="tk-flag">RUN</div><div class="tk-flash"></div></div>
+            <div class="tk-cell" id="tk0"><div class="tk-name"><b>SCS</b> · Silver Creek</div><div class="tk-price num">$0.00</div><div class="tk-chg up"><i class="arr">▲</i><span class="num">0.00</span></div><canvas class="tk-spark"></canvas><div class="tk-flag">RUN</div><div class="tk-flash"></div></div>
+            <div class="tk-cell" id="tk1"><div class="tk-name"><b>RRT</b> · Red Rock</div><div class="tk-price num">$0.00</div><div class="tk-chg up"><i class="arr">▲</i><span class="num">0.00</span></div><canvas class="tk-spark"></canvas><div class="tk-flag">RUN</div><div class="tk-flash"></div></div>
             <div class="tk-cell" id="tkg"><div class="tk-name"><b>GOLD</b> · per oz</div><div class="tk-price num">$0.00</div><div class="tk-chg up"><i class="arr">▲</i><span class="num">0.00</span></div><canvas class="tk-spark"></canvas><div class="tk-flash"></div></div>
           </div>
         </div>
@@ -391,7 +407,7 @@ body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px
           <span class="pl-k">carried</span><span class="pl-v big num" id="vCarried">$0</span>
           <span class="pl-k pl-hot-k" id="kHot">hot gold</span><span class="pl-v hot num" id="vHot">$0</span>
           <span class="pl-k">in bank</span><span class="pl-v num" id="vBank">$0</span>
-          <span class="pl-k">shares</span><span class="pl-v num" id="vShares">0</span>
+          <span class="pl-k" id="kShares">shares</span><span class="pl-v num" id="vShares">0</span>
           <span class="pl-sub num" id="vWorth">Net worth $0</span>
         </div>
       </div>
@@ -406,6 +422,8 @@ body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px
       </div>
     <div class="minimap" aria-hidden="true"><canvas id="minimap" width="200" height="200"></canvas><span class="n">N</span></div>
 
+    <div id="objective"></div>
+    <div id="daypill" class="num"></div>
     <div id="prompt" hidden></div>
     <div id="toasts" aria-live="polite"></div>
     <div id="banner"></div>
@@ -438,7 +456,7 @@ body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px
         <button class="cta alt" id="howBtn">How to play</button>
       </div>
       <div class="scores-mini paper" id="scoresMini" hidden></div>
-      <p class="fine">WASD or arrows to move · E to use · K to die · switch jobs any time. On a phone: left thumb moves, the brass button uses.</p>
+      <p class="fine"><span class="kb">WASD or arrows to move · E to use · K to respawn · </span>Switch jobs any time. On a phone: left thumb moves, the brass button acts.</p>
     </div>
   </div>
 
@@ -450,7 +468,7 @@ body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px
       <div class="steps">
         <div class="step"><h3>1 · Move and use</h3><p><span class="kc">WASD</span> or the left thumb to move. Walk up to a building and press <span class="kc">E</span> (or the brass button): the bank takes deposits, the telegraph trades shares, the saloon pours whiskey, the stables rent horses.</p></div>
         <div class="step"><h3>2 · The raid</h3><p>Every 45 seconds the gang dynamites a vault and it stays open for 20. Each sack stolen drops that bank's stock and every depositor's balance by the same percent.</p></div>
-        <div class="step"><h3>3 · Law and outlaws</h3><p>Lawmen at the bank when the raid ends earn a share if the vault is still over half full. Outlaws inside the vault press <span class="kc">E</span> for a sack: that gold is hot until fenced at the hideout east of town.</p></div>
+        <div class="step"><h3>3 · Law and outlaws</h3><p>Lawmen at the bank when the raid ends earn a share if the vault is still over half full. Outlaws inside the vault press <span class="kc">E</span> for a sack: that gold is hot until fenced at the hideout × north-east of town.</p></div>
         <div class="step"><h3>4 · The trading day</h3><p>The closing bell rings every minute. Banks that held pay dividends; if withdrawals pass 40% it's a bank run. Six bells and the day ends: your score is your net worth plus goals met.</p></div>
       </div>
       <div class="howbar"><i id="howbar"></i></div>
@@ -505,7 +523,7 @@ const CFG={
   BELL:60, BELLS:6,
   SACK_PCT:.08, STUFF_P:1.0, STUFF_B:1.9, MAX_SACKS:4, BOT_SACKS:3, SACK_SLOW:.08,
   RUN_PCT:.40, RUN_CRASH:.35, DIVIDEND:1,
-  MINE_EVERY:3, BOUNTY_STAR:27, DEFENSE_PAY:25,
+  MINE_EVERY:3, BOUNTY_STAR:24, DEFENSE_PAY:10,
   START_GOLD:30, WHISKEY:4, HORSE:5, HORSE_T:22,
   P_SPEED:165, BOT_SPEED:120, FOLK_SPEED:78, HORSE_MUL:1.55,
   LAW_RANGE:255, LAW_AIM:.55, LAW_COOL:1.8, LAW_HITR:15,
@@ -551,7 +569,7 @@ function buildWorld(){
     const corral={kind:'corral',x:o+460,y:1165,w:190,h:140,town:ti}; WORLD.solids.push(corral); T.corral=corral;
     T.street={x0:o-160,x1:o+1460};
     T.center={x:o+660,y:STREET_Y};
-    T.claim={x:o+640,y:390,r:74,hill:{x:o+560,y:250,w:170,h:100}};
+    T.claim={x:o+640,y:390,r:74,rich:1,hill:{x:o+560,y:250,w:170,h:100}};
     WORLD.solids.push(Object.assign({kind:'hill',town:ti},T.claim.hill));
     WORLD.claims.push(T.claim);
     // props: [type,x,y]
@@ -568,8 +586,8 @@ function buildWorld(){
   }
   // hideout — a red-rock ring east of Silver Creek
   const hx=2380,hy=470; WORLD.hideout={x:hx,y:hy,r:70};
-  for(let a=-3.3;a<0.05;a+=.34){ const rr=150+sr(-12,16); WORLD.props.push({type:'boulder',x:hx+Math.cos(a)*rr*1.25,y:hy+Math.sin(a)*rr,s:sr(30,46),town:-1}); }
-  for(const a of [0.35,0.62,2.52,2.8]){ WORLD.props.push({type:'boulder',x:hx+Math.cos(a)*170,y:hy+Math.sin(a)*140,s:sr(28,38),town:-1}); }
+  for(let a=-2.45;a<0.05;a+=.34){ const rr=150+sr(-12,16); WORLD.props.push({type:'boulder',x:hx+Math.cos(a)*rr*1.25,y:hy+Math.sin(a)*rr,s:sr(30,46),town:-1}); }
+  for(const a of [0.35,0.62]){ WORLD.props.push({type:'boulder',x:hx+Math.cos(a)*170,y:hy+Math.sin(a)*140,s:sr(28,38),town:-1}); }
   WORLD.props.push({type:'tent',x:hx-70,y:hy-40,town:-1},{type:'fire',x:hx+30,y:hy+10,town:-1},{type:'wagonH',x:hx+90,y:hy-50,town:-1});
   // telegraph poles along street and road
   for(let x=120;x<4600;x+=290) WORLD.poles.push({x,y:STREET_Y+120+Math.sin(x*.004)*6});
@@ -764,7 +782,6 @@ function setRole(role,quiet){
   if(!P||P.role===role) return true;
   if(role==='law'&&P.stars>0){ emit('toast','No badge for a wanted man. Lay low until your stars fade.','bad'); return false; }
   P.role=role; P.mining=false;
-  if(!quiet) emit('toast',{law:'You pin on a deputy badge.',outlaw:'You pull up the bandana.',prospector:'You shoulder a pickaxe.',hunter:'You sign on as a bounty hunter.'}[role],'good');
   emit('role',role); return true;
 }
 function hurtPlayer(n,src){
@@ -776,10 +793,11 @@ function hurtPlayer(n,src){
 function killPlayer(src){
   if(!P.alive) return;
   const val=P.carried+P.hot;
-  if(val>0) G.piles.push({x:P.x,y:P.y,clean:P.carried,hot:P.hot,origin:P.hotOrigin??-1,t:G.t});
+  const keep=Math.floor(P.carried/2); P.carried-=keep;
+  if(P.carried+P.hot>0) G.piles.push({x:P.x,y:P.y,clean:P.carried,hot:P.hot,origin:P.hotOrigin??-1,t:G.t});
   emit('death',src,val,P.carried,P.hot);
   if(!G.sim){ for(let i=0;i<Math.min(28,val/3);i++) spawnCoin(P.x,P.y,rnd(60,220),rnd(0,TAU)); }
-  P.carried=0; P.hot=0; P.sacks=0; P.stars=0; P.mining=false; P.horse=0; P.alive=false; P.respawn=2.4; P.stats.deaths++;
+  P.carried=keep; P.hot=0; P.sacks=0; P.stars=0; P.mining=false; P.horse=0; P.alive=false; P.respawn=2.4; P.stats.deaths++;
 }
 function respawnPlayer(){
   const T=WORLD.towns[P.lastTown];
@@ -801,8 +819,8 @@ function playerContext(){
   }
   if(P.role==='hunter'||P.role==='law'){
     let best=null,bd=40*40;
-    for(const a of G.actors) if(a.kind==='outlaw'&&a.alive&&a.stars>0){ const d=dist2(x,y,a.x,a.y); if(d<bd){bd=d;best=a;} }
-    if(best) return {id:'catch',label:`Catch ${'★'.repeat(best.stars)} · ${money(best.stars*CFG.BOUNTY_STAR)}`,target:best};
+    for(const a of G.actors) if(a.kind==='outlaw'&&a.alive&&(a.stars>0||(P.role==='law'&&G.banks[a.home].raidOn&&(a.state==='raid'||a.state==='flee')))){ const d=dist2(x,y,a.x,a.y); if(d<bd){bd=d;best=a;} }
+    if(best) return {id:'catch',label:best.stars?`Cuff ${'★'.repeat(best.stars)} · ${money(best.stars*CFG.BOUNTY_STAR)}`:'Cuff the raider',target:best};
   }
   const h=WORLD.hideout;
   if(dist2(x,y,h.x,h.y)<h.r*h.r) return P.hot>0?{id:'fence',label:`Fence ${money(P.hot)} of hot gold`}:{id:'hideout',label:'Hideout · nothing to fence',no:true};
@@ -833,8 +851,8 @@ function playerUse(){
   }
 }
 function catchOutlaw(a){
-  const pay=a.stars*CFG.BOUNTY_STAR;
-  P.carried+=pay; P.stats.bounties++; P.stats.bountyPay+=pay;
+  const pay=Math.round(Math.max(1,a.stars)*CFG.BOUNTY_STAR*(P.role==='law'?.25:1));
+  P.carried+=pay; if(P.role==='law') P.stats.cuffs=(P.stats.cuffs||0)+1; else P.stats.bounties++; P.stats.bountyPay+=pay;
   if(a.hot>0&&a.origin>=0){ G.banks[a.origin].vault+=a.hot; }
   emit('bounty',a,pay); emit('tape',`OUTLAW BROUGHT IN · ${'★'.repeat(a.stars)} · BOUNTY ${money(pay)} PAID`,'good');
   jailOutlaw(a);
@@ -921,7 +939,7 @@ function updateOutlaw(a,dt){
       if(a.wait>0){ a.wait-=dt; brake(a,dt); break; }
       const inV=inRect(a.x,a.y,T.vaultIn,4);
       let L=nearestLaw(a.x,a.y,inV?45:95);
-      if(!L&&P&&P.active&&P.alive&&P.role==='law'&&dist2(a.x,a.y,P.x,P.y)<125*125) L=P; // a player deputy is scarier than the hired guns
+      if(!L&&P&&P.active&&P.alive&&P.role==='law'&&dist2(a.x,a.y,P.x,P.y)<42*42) L=P; // a player deputy is scarier than the hired guns
       if(L){ a.state='flee'; a.from=L; a.fleeT=rnd(1.4,2.4); a.after=a.sacks>=CFG.BOT_SACKS?'escape':'raid'; a.stuff=0; a.path=null; break; }
       if(inRect(a.x,a.y,T.vaultIn,4)){
         brake(a,dt); a.stuff+=dt/CFG.STUFF_B;
@@ -1076,7 +1094,8 @@ function updatePlayer(dt){
   // mining
   if(P.mining){ const cl=WORLD.towns[P.lastTown].claim;
     if(P.role!=='prospector'||dist2(P.x,P.y,cl.x,cl.y)>cl.r*cl.r||m>.3){ P.mining=false; emit('toast','You stop digging.',''); }
-    else { P.mineT+=dt; if(P.mineT>=CFG.MINE_EVERY){ P.mineT-=CFG.MINE_EVERY; const v=G.gold; P.carried+=v; P.stats.mined+=v; emit('mine',v); } } }
+    else { P.mineT+=dt; if(P.mineT>=CFG.MINE_EVERY){ P.mineT-=CFG.MINE_EVERY; const v=G.gold*cl.rich; cl.rich=Math.max(.4,cl.rich-.012); P.carried+=v; P.stats.mined+=v; emit('mine',v); } } }
+  for(const T of WORLD.towns){ const c=T.claim; if(!(P.mining&&T.i===P.lastTown)) c.rich=Math.min(1,c.rich+dt*.01); }
   // stars fade when you lay low
   if(P.stars>0&&G.t-P.lastCrime>CFG.STAR_WAIT+(P.starTick||0)){ P.starTick=(P.starTick||0)+CFG.STAR_DECAY; P.stars--; emit('stars',P.stars,-1); if(!P.stars) P.starTick=0; }
   // loose gold underfoot
@@ -1133,7 +1152,7 @@ const CHUNKS=new Map(), SPR=new Map(); let chunkBudget=0;
 function resize(){
   DPR=Math.min(window.devicePixelRatio||1,DPR_CAP); VW=innerWidth; VH=innerHeight;
   cv.width=Math.round(VW*DPR); cv.height=Math.round(VH*DPR);
-  BASEZ=clamp(Math.min(VH/560,VW/520),.62,1.4);
+  BASEZ=clamp(Math.min(VH/470,VW/420),.8,1.7);
   const nS=Math.min(BASEZ*DPR,2.3); if(Math.abs(nS-S)>.01){ S=nS; CHUNKS.clear(); SPR.clear(); }
   MM.resize();
 }
@@ -1441,7 +1460,8 @@ function drawAnnexWall(T,b,part){
     cx.fillStyle='#cfd3d8'; for(let xx=A.x+8;xx<A.x+A.w;xx+=16){ cx.fillRect(xx,top+3,2,2); cx.fillRect(xx,top+A.h-5,2,2); }
     if(b.repair>0||b.raids>0){ // boards over the old blast hole
       cx.fillStyle='#8a5e37'; for(let k=0;k<4;k++){ cx.save(); cx.translate(A.x+A.w-22,top+34+k*20); cx.rotate(-.12+k*.07); cx.fillRect(-18,-5,40,9); cx.fillStyle='#3b2a1c'; cx.fillRect(-15,-2,2,2); cx.fillRect(16,-2,2,2); cx.fillStyle='#8a5e37'; cx.restore(); } }
-    if(b.fuse){ const fx0=A.x+A.w+6,fy0=A.y+A.h/2+6; cx.fillStyle='#b8322a'; for(let k=0;k<3;k++){ rr(cx,fx0-2+k*5,fy0-16,5,18,2); cx.fill(); } cx.fillStyle='#6b4a2a'; cx.fillRect(fx0-3,fy0-10,17,3);
+    if(b.fuse){ const k=Math.sin(G.t*12)*.5+.5; cx.strokeStyle=`rgba(200,30,20,${.45+k*.4})`; cx.lineWidth=4; cx.setLineDash([14,9]); cx.beginPath(); cx.ellipse(A.x+A.w,A.y+A.h/2,190,120,0,0,TAU); cx.stroke(); cx.setLineDash([]); cx.fillStyle=`rgba(200,30,20,${.06+k*.05})`; cx.fill();
+      const fx0=A.x+A.w+6,fy0=A.y+A.h/2+6; cx.fillStyle='#b8322a'; for(let k=0;k<3;k++){ rr(cx,fx0-2+k*5,fy0-16,5,18,2); cx.fill(); } cx.fillStyle='#6b4a2a'; cx.fillRect(fx0-3,fy0-10,17,3);
       const burn=clamp((b.nextRaid-G.t)/CFG.FUSE,0,1), ex=fx0+6+ (1-burn)*0, ey=fy0-16-burn*14;
       cx.strokeStyle='#3b2a1c'; cx.lineWidth=1.4; cx.beginPath(); cx.moveTo(fx0+6,fy0-16); cx.quadraticCurveTo(fx0+16,fy0-26,ex+burn*10,ey); cx.stroke();
       if(Math.random()<.9&&!G.sim) for(let k=0;k<2;k++) spawnSpark(ex+burn*10,ey,140);
@@ -1478,7 +1498,7 @@ function drawActor(a,alpha){
   // ground shadow
   g.fillStyle='rgba(60,32,10,.32)'; g.beginPath(); g.ellipse(x+4,y+1.5,12,4.6,.12,0,TAU); g.fill();
   const riding=a===P&&P.horse>0;
-  g.translate(x,y+(riding?-14:0)); if(dir==='l') g.scale(-1,1);
+  g.translate(x,y+(riding?-14:0)); g.scale(1.25,1.25); if(dir==='l') g.scale(-1,1);
   if(riding) drawHorseUnder(g,dir,ph,moving);
   const side=dir==='l'||dir==='r';
   const back=dir==='u';
@@ -1601,8 +1621,17 @@ function render(){
   cx.setTransform(DPR,0,0,DPR,0,0);
   for(const m of MOTES){ cx.fillStyle=`rgba(255,238,200,${m.a})`; cx.beginPath(); cx.arc(m.x,m.y,m.r,0,TAU); cx.fill(); }
   if(OVERLAY) cx.drawImage(OVERLAY,0,0,VW,VH);
+  drawTargetArrow(Z);
   if(G.flash>0){ cx.fillStyle=`rgba(255,236,200,${G.flash})`; cx.fillRect(0,0,VW,VH); }
 }
+function drawTargetArrow(Z){
+  const t=HUD.target; if(!t||G.mode!=='play'||!P||!P.alive) return;
+  let sx=(t.x-CAM.x)*Z+VW/2, sy=(t.y-CAM.y)*Z+VH/2; const m=46, on=sx>m&&sx<VW-m&&sy>150&&sy<VH-m, bob=Math.sin(G.t*6)*5;
+  cx.save();
+  if(on){ if(dist2(P.x,P.y,t.x,t.y)<60*60){ cx.restore(); return; } cx.translate(sx,sy-58+bob); cx.rotate(Math.PI/2); }
+  else { const px=VW/2,py=VH/2,a=Math.atan2(sy-py,sx-px); const k=Math.min((VW/2-m)/Math.abs(Math.cos(a)||1e-6),(VH/2-m)/Math.abs(Math.sin(a)||1e-6)); cx.translate(px+Math.cos(a)*k,py+Math.sin(a)*k); cx.rotate(a); cx.translate(bob*.6,0); }
+  cx.beginPath(); cx.moveTo(18,0); cx.lineTo(-10,-14); cx.lineTo(-4,0); cx.lineTo(-10,14); cx.closePath();
+  cx.lineWidth=5; cx.strokeStyle='rgba(36,20,8,.9)'; cx.stroke(); cx.fillStyle='#f6c632'; cx.fill(); cx.restore(); }
 function drawBell(b){ const tx=b.x+b.w/2, ty=b.y-b.fH-44+58; const ring=G.banks.some(k=>k.i===b.town&&(k.raidOn&&G.t<k.raidEnd-CFG.RAID_LEN+6)); const sw=ring?Math.sin(G.t*14)*.5:0;
   cx.save(); cx.translate(tx,ty-6); cx.rotate(sw); cx.fillStyle='#c9a152'; cx.beginPath(); cx.moveTo(-7,8); cx.quadraticCurveTo(-7,-4,0,-5); cx.quadraticCurveTo(7,-4,7,8); cx.closePath(); cx.fill(); cx.fillStyle='#8a6a2a'; cx.fillRect(-8,7,16,2.5); cx.restore();
   if(ring){ for(let k=0;k<3;k++){ const ph=((G.t*1.6+k/3)%1); cx.strokeStyle=`rgba(255,240,200,${(1-ph)*.7})`; cx.lineWidth=2; cx.beginPath(); cx.arc(tx,ty-6,14+ph*70,-2.6,-.5); cx.stroke(); cx.beginPath(); cx.arc(tx,ty-6,14+ph*70,.5+Math.PI/2+.1,2.6+.1+Math.PI/2-.2); cx.stroke(); } } }
@@ -1620,10 +1649,10 @@ function drawPiles(){ for(const p of G.piles){ const v=p.clean+p.hot, n=clamp(Ma
   cx.font='700 11px "Alegreya Sans SC", sans-serif'; cx.textAlign='center'; cx.fillStyle='rgba(40,25,10,.8)'; cx.fillText(money(v)+(p.hot>0?' hot':''),p.x+1,p.y-12); cx.fillStyle=p.hot>0?'#ffd9a0':'#fff4cf'; cx.fillText(money(v)+(p.hot>0?' hot':''),p.x,p.y-13); } }
 function drawAboveHeads(){
   for(const a of G.actors){ if(!a.alive) continue;
-    if(a.bubbleT>0&&a.bubble){ cx.fillStyle='#fff6df'; rr(cx,a.x-7,a.y-66,14,16,4); cx.fill(); cx.fillStyle='#b1261c'; cx.font='700 13px Rye, serif'; cx.textAlign='center'; cx.fillText(a.bubble,a.x,a.y-53); }
-    if(a.stars>0&&a.kind==='outlaw'&&(P&&(P.role==='hunter'||P.role==='law'))){ cx.font='10px serif'; cx.textAlign='center'; cx.fillStyle='#b1261c'; cx.fillText('★'.repeat(a.stars),a.x,a.y-50); }
-    if(a.kind==='outlaw'&&a.stuff>0){ cx.strokeStyle='#f6c632'; cx.lineWidth=2.5; cx.beginPath(); cx.arc(a.x,a.y-54,7,-Math.PI/2,-Math.PI/2+a.stuff*TAU); cx.stroke(); } }
-  if(P&&P.stuff>0){ cx.strokeStyle='rgba(0,0,0,.35)'; cx.lineWidth=5; cx.beginPath(); cx.arc(P.x,P.y-56,11,0,TAU); cx.stroke(); cx.strokeStyle='#f6c632'; cx.lineWidth=4; cx.beginPath(); cx.arc(P.x,P.y-56,11,-Math.PI/2,-Math.PI/2+P.stuff*TAU); cx.stroke(); }
+    if(a.bubbleT>0&&a.bubble){ cx.fillStyle='#fff6df'; rr(cx,a.x-7,a.y-82,14,16,4); cx.fill(); cx.fillStyle='#b1261c'; cx.font='700 13px Rye, serif'; cx.textAlign='center'; cx.fillText(a.bubble,a.x,a.y-69); }
+    if(a.stars>0&&a.kind==='outlaw'&&(P&&(P.role==='hunter'||P.role==='law'))){ cx.font='10px serif'; cx.textAlign='center'; cx.fillStyle='#b1261c'; cx.fillText('★'.repeat(a.stars),a.x,a.y-64); }
+    if(a.kind==='outlaw'&&a.stuff>0){ cx.strokeStyle='#f6c632'; cx.lineWidth=2.5; cx.beginPath(); cx.arc(a.x,a.y-70,7,-Math.PI/2,-Math.PI/2+a.stuff*TAU); cx.stroke(); } }
+  if(P&&P.stuff>0){ cx.strokeStyle='rgba(0,0,0,.35)'; cx.lineWidth=5; cx.beginPath(); cx.arc(P.x,P.y-72,11,0,TAU); cx.stroke(); cx.strokeStyle='#f6c632'; cx.lineWidth=4; cx.beginPath(); cx.arc(P.x,P.y-72,11,-Math.PI/2,-Math.PI/2+P.stuff*TAU); cx.stroke(); }
 }
 function drawFx(vx0,vx1,vy0,vy1){
   for(const s of G.shots){ const k=s.t/.12; cx.strokeStyle=`rgba(255,240,190,${k})`; cx.lineWidth=2; cx.beginPath(); cx.moveTo(s.x0,s.y0-22); cx.lineTo(s.x1,s.y1-18); cx.stroke();
@@ -1726,12 +1755,13 @@ function hudFrame(dt){
   HUD.lastT+=dt; hudTape(dt);
   // prompt + action button
   const c=playerContext(); const pr=$('#prompt'), act=$('#act');
-  if(c&&!HUD.panel){ const Z=ZOOM(); const sx=(P.x-CAM.x)*Z+VW/2, sy=(P.y-64-CAM.y)*Z+VH/2; pr.hidden=false; pr.className=c.no?'no':''; pr.innerHTML=(c.no||document.body.classList.contains('touch')?'':'<span class="key">E</span>')+c.label; pr.style.transform=`translate(${sx}px,${sy}px) translate(-50%,-100%)`; }
+  if(c&&!HUD.panel){ const Z=ZOOM(); const sx=(P.x-CAM.x)*Z+VW/2, sy=(P.y-78-CAM.y)*Z+VH/2; pr.hidden=false; pr.className=c.no?'no':''; pr.innerHTML=(c.no||document.body.classList.contains('touch')?'':'<span class="key">E</span>')+c.label; pr.style.transform=`translate(${sx}px,${sy}px) translate(-50%,-100%)`; }
   else pr.hidden=true;
   const lab=c&&!c.no?({grab:'GRAB',catch:'CATCH',fence:'FENCE',mine:'MINE',bank:'BANK',telegraph:'TRADE',saloon:'DRINK',stables:'HORSE',sheriff:'BOARD'}[c.id]||'USE'):'USE';
   if(act.textContent!==lab) act.textContent=lab; act.classList.toggle('idle',!c||!!c.no);
   if(HUD.panel){ HUD.panelT-=dt; if(!c||c.id!==HUD.panel.id){ closePanel(); } else if(HUD.panelT<=0){ HUD.panelT=.25; renderPanel(); } }
   if(HUD.lastT<.12) return; HUD.lastT=0;
+  hudObjective();
   // numbers
   tweenNum($('#vCarried'),P.carried,money); tweenNum($('#vHot'),P.hot,money); tweenNum($('#vBank'),P.pb[0]+P.pb[1],money);
   $('#vShares').textContent=P.sh[0]+P.sh[1]?`${P.sh[0]} SCS · ${P.sh[1]} RRT`:'0';
@@ -1754,6 +1784,39 @@ function hudFrame(dt){
   $('#bountyTxt').textContent=P.stars>0?(G.t-P.lastCrime<CFG.STAR_WAIT?'Lawmen will shoot on sight':'Laying low… stars fading'):'';
   if(Math.random()<.2) hudGoal();
 }
+function objectiveFor(){
+  if(!P.alive) return {txt:'Shot down. Getting back up…'};
+  const x=P.x, here=G.banks[townOf(x)], raid=G.banks.find(b=>b.raidOn), next=soonestBank(), T=next.T, t=mmss(next.raidOn?next.raidEnd-G.t:next.nextRaid-G.t);
+  const r=P.role, fused=G.banks.find(b=>b.fuse&&dist2(x,P.y,b.T.hole.x,b.T.hole.y)<260*260);
+  if(fused) return {txt:`Fuse lit! <b>Get clear</b> of the red circle`,alert:true};
+  if(r==='outlaw'){
+    if(P.hot>0&&(!raid||P.sacks>=CFG.MAX_SACKS)) return {txt:`Run the hot gold to the <b>hideout ×</b>`,tgt:WORLD.hideout,alert:P.stars>0};
+    if(raid){ const R=raid.T; if(inRect(x,P.y,R.vaultIn,6)) return {txt:`Press <b>E</b> to grab a sack (${P.sacks}/${CFG.MAX_SACKS})`,t:mmss(raid.raidEnd-G.t),alert:true};
+      return {txt:`Vault's open at <b>${R.name}</b>! Get inside`,t:mmss(raid.raidEnd-G.t),tgt:R.hole,alert:true}; }
+    if(P.carried>=60&&P.stars===0) return {txt:`Bank your clean gold`,tgt:here.T.b.bank.door};
+    return {txt:`Gang blows the <b>${T.name}</b> vault in`,t,tgt:{x:T.hole.x+40,y:T.hole.y+200}};
+  }
+  if(r==='law'){
+    if(raid){ const R=raid.T; return inRect(x,P.y,R.zone)?{txt:`Cuff the raiders: touch one, press <b>E</b>`,t:mmss(raid.raidEnd-G.t),alert:true}:{txt:`RAID at <b>${R.name}</b>! Get to the bank`,t:mmss(raid.raidEnd-G.t),tgt:R.b.bank.door,alert:true}; }
+    return {txt:`Guard the <b>${T.name}</b> bank. Raid in`,t,tgt:T.b.bank.door};
+  }
+  if(r==='prospector'){
+    const cl=WORLD.towns[townOf(x)].claim;
+    if(P.carried>=100&&!P.mining) return {txt:`Bank your gold before someone takes it`,tgt:here.T.b.bank.door};
+    if(dist2(x,P.y,cl.x,cl.y)>cl.r*cl.r) return {txt:`Go to your <b>gold claim</b>`,tgt:cl};
+    if(cl.rich<.45){ const o=WORLD.towns[1-townOf(x)].claim; return {txt:`This vein is thin. Try the <b>other claim</b>`,t:Math.round(cl.rich*100)+'%',tgt:o}; }
+    return P.mining?{txt:`Digging… vein at ${Math.round(cl.rich*100)}%`,t:money2(G.gold*cl.rich)+'/oz'}:{txt:`Press <b>E</b> to dig`};
+  }
+  let best=null,bd=1e12; for(const a of G.actors) if(a.kind==='outlaw'&&a.alive&&a.stars>0){ const d=dist2(a.x,a.y,x,P.y); if(d<bd){bd=d;best=a;} }
+  if(best) return {txt:`Catch the ${'★'.repeat(best.stars)} outlaw: touch him, press <b>E</b>`,t:money(best.stars*CFG.BOUNTY_STAR),tgt:best};
+  return {txt:`No bounties yet. Wait near <b>${T.name}</b> bank, raid in`,t,tgt:{x:T.hole.x+60,y:T.hole.y+180}};
+}
+function hudObjective(){ const o=objectiveFor(), el=$('#objective'); HUD.target=o.tgt||null;
+  const h=o.txt+(o.t?`<span class="t">${o.t}</span>`:''); if(el._h!==h){ el._h=h; el.innerHTML=h; } el.classList.toggle('alert',!!o.alert);
+  $('#daypill').textContent=`Bell ${Math.min(CFG.BELLS,G.bells+1)}/${CFG.BELLS} · ${mmss(G.nextBell-G.t)}`;
+  document.querySelector('.wanted').classList.toggle('off',P.stars===0);
+  const own=P.sh[0]+P.sh[1]>0; $('#kShares').style.display=$('#vShares').style.display=own?'':'none';
+  $('#kHot').style.display=$('#vHot').style.display=P.hot>0?'':'none'; }
 function hudStars(){ const st=document.querySelectorAll('#stars .star');
   st.forEach((s,i)=>{ const onNow=i<P.stars, was=s.classList.contains('on'); s.classList.toggle('on',onNow);
     if(onNow&&!was) gs.fromTo(s,{scale:2.4,rotation:-40,autoAlpha:0},{scale:1,rotation:0,autoAlpha:1,duration:.55,ease:'back.out(2.2)',delay:(i-HUD.shownStars)*.06});
@@ -1811,7 +1874,7 @@ on('toast',(t,k)=>toast(t,k));
 on('tape',(t,k)=>{ if(HUD.tape) tapePush(t,k); });
 on('panel',(id,b)=>openPanel(id,b));
 on('role',()=>{ hudRoles(); sfx.click(); });
-on('fuse',b=>{ const T=b.T; if(nearCam(T.annex.x,T.annex.y,1500)) sfx.fuse(); if(P&&P.active) toast(`Fuse lit at the ${T.name} vault!`,'bad'); });
+on('fuse',b=>{ const T=b.T; if(nearCam(T.annex.x,T.annex.y,1500)) sfx.fuse();  });
 on('boom',(b,x,y)=>{
   const d=dist(x,y,CAM.x,CAM.y), near=clamp(1-d/1500,0,1);
   const vol=G.mode==='play'?1:.25; sfx.boom((.25+near*.75)*vol); setTimeout(()=>sfx.bell((near*.8+.2)*vol),650);
@@ -1828,7 +1891,7 @@ on('boom',(b,x,y)=>{
 });
 on('priceHit',(b,pct)=>{ if(G.mode!=='play') return; const c=document.querySelectorAll('.tk-cell')[b.i]; c._flash.style.background='rgba(200,40,25,.35)'; gs.fromTo(c._flash,{opacity:1},{opacity:0,duration:.7,ease:'power2.out'}); if(pct>.04) shakeEl('#ticker',6); });
 on('raidEnd',(b,held,pct,earned)=>{ if(G.mode!=='play') return; const mine=townOf(P.x)===b.i;
-  if(mine||P.role==='law'||P.role==='outlaw') stamp(held?'VAULT HELD':'BREACHED',held?'good':'',`${b.T.name} · ${Math.round(pct*100)}% taken`);
+  if(mine&&(P.role==='law'||P.role==='outlaw')) stamp(held?'VAULT HELD':'BREACHED',held?'good':'',`${b.T.name} · ${Math.round(pct*100)}% taken`);
   if(earned){ const [sx,sy]=worldToScreen(P.x,P.y-60); flyTo(sx,sy,'#vShares','<span style="display:inline-block;width:30px;height:21px;background:linear-gradient(#fbf1d6,#e2cc98);border:1px solid #6b4a22;border-radius:2px;box-shadow:0 3px 6px rgba(0,0,0,.45);position:relative"><i style="position:absolute;left:4px;right:10px;top:5px;height:2px;background:#8a6a3a"></i><i style="position:absolute;left:4px;right:12px;top:10px;height:2px;background:#8a6a3a"></i><i style="position:absolute;right:3px;bottom:2px;width:8px;height:8px;border-radius:50%;background:#c9a152;box-shadow:0 0 0 1px #7b5a22"></i></span>'); setTimeout(()=>{ stamp('+1 SHARE','gold',`${b.sym} · plus ${money(CFG.DEFENSE_PAY)} pay`); sfx.cash(); },700); floatText(P.x,P.y-70,'+1 SHARE','#ffe07a',true); }
   else if(held&&P.role==='law'&&mine) toast('Vault held, but you weren’t at the bank when it ended.','bad'); });
 on('sack',(amt,b)=>{ for(let i=0;i<14;i++) spawnCoin(P.x,P.y-10,rnd(40,150),rnd(0,TAU),rnd(20,40)); floatText(P.x,P.y-62,'+'+money(amt)+' HOT','#ffb13b'); sfx.coins(5); G.trauma=Math.min(1,G.trauma+.12); });
@@ -1839,9 +1902,9 @@ on('trade',(b,n,got)=>{ sfx.tick(); floatText(P.x,P.y-62,n>0?`+${n} ${b.sym}`:`$
 on('fence',v=>{ for(let i=0;i<22;i++) spawnCoin(P.x,P.y-10,rnd(40,170),rnd(0,TAU),30); floatText(P.x,P.y-62,'+'+money(v)+' CLEAN','#ffe07a',true); sfx.cash(); stamp('FENCED','gold',money(v)+' now clean'); });
 on('mine',v=>{ spawnCoin(P.x+rnd(-10,10),P.y-6,rnd(40,90),rnd(0,TAU),10); for(let i=0;i<4;i++) spawnDust(P.x+rnd(-12,12),P.y+4,1); floatText(P.x,P.y-62,'+'+money2(v),'#ffe07a'); sfx.pick(); });
 on('hurt',(n,src)=>{ edgePulse('#hurtEdge',1,.7); sfx.hurt(); hudHealth(); floatText(P.x,P.y-64,src==='dynamite'?'BLAST!':'HIT!','#ff8a7a'); });
-on('death',(src,val)=>{ sfx.death(); G.slowmo=.35; setTimeout(()=>G.slowmo=1,900); stamp('SHOT DOWN','',val>0?`Dropped ${money(val)} where you fell`:'Nothing lost but pride'); gs.fromTo('#fade',{opacity:0},{opacity:.65,duration:1.2,ease:'power1.in'}); });
+on('death',(src,val)=>{ sfx.death(); G.slowmo=.35; setTimeout(()=>G.slowmo=1,900); stamp(src==='you'?'RESPAWN':'SHOT DOWN','',val>0?'Dropped your hot gold and half your cash where you fell':'Nothing lost but pride'); gs.fromTo('#fade',{opacity:0},{opacity:.65,duration:1.2,ease:'power1.in'}); });
 on('respawn',()=>{ gs.to('#fade',{opacity:0,duration:.6}); hudHealth(); hudStars(); toast(P.role==='outlaw'?'You come to at the hideout.':'You come to in town.',''); });
-on('bell',(n,paid)=>{ sfx.bell(.9); setTimeout(()=>sfx.bell(.6),900); if(G.mode==='play'&&n<CFG.BELLS){ stamp(`BELL ${n}`,'gold',`${CFG.BELLS-n} left in the trading day`); if(paid.length) toast('Dividends paid: '+paid.join(', '),'good'); } });
+on('bell',(n,paid)=>{ sfx.bell(.9); setTimeout(()=>sfx.bell(.6),900); if(G.mode==='play'&&paid.length) toast('Dividends paid: '+paid.join(', '),'good'); });
 on('run',b=>{ if(G.mode!=='play') return; stamp('BANK RUN','',`${b.name} · deposits frozen`); sfx.boom(.25); shakeEl('#ticker',16); });
 on('bounty',(a,pay)=>{ sfx.cash(); floatText(a.x,a.y-62,'+'+money(pay)+' BOUNTY','#ffe07a',true); stamp('BROUGHT IN','good',money(pay)+' bounty'); for(let i=0;i<12;i++) spawnDust(a.x+rnd(-14,14),a.y+rnd(-6,6),1.4); });
 on('shot',(a,x,y,hit)=>{ const d=dist(a.x,a.y,CAM.x,CAM.y); if(d<1300) sfx.shot(clamp(1-d/1300,.1,1)*(G.mode==='play'?1:.25)); if(!hit) for(let i=0;i<3;i++) spawnDust(x+rnd(-4,4),y+rnd(-4,4),.7); else for(let i=0;i<6;i++) spawnSpark(x,y-18,200); });
@@ -1955,11 +2018,10 @@ function startDay(){
   HUD.tape.innerHTML=''; HUD.tapeItems=[]; HUD.tapeX=0; tapePush(`TRADING OPENS · ${G.banks.map(b=>`${b.sym} ${b.price.toFixed(2)}`).join(' · ')} · GOLD ${G.gold.toFixed(2)}/OZ`,'good');
   CAM.x=P.x; CAM.y=P.y;
   if(HAS_GSAP&&!reduceMotion){ gsap.from('#ticker .brass-frame, #ticker .tape',{y:-140,duration:.8,ease:'expo.out',stagger:.06,clearProps:'transform'}); gsap.from('.clock',{x:-260,duration:.8,ease:'expo.out',delay:.1,clearProps:'x'}); gsap.from('.wanted',{x:220,duration:.8,ease:'expo.out',delay:.15,clearProps:'transform'}); gsap.from('.status',{y:220,duration:.8,ease:'expo.out',delay:.2,clearProps:'transform'}); gsap.from('#roles',{y:120,duration:.8,ease:'expo.out',delay:.24,clearProps:'transform'}); gsap.from('.minimap',{scale:0,rotation:-90,duration:.9,ease:'back.out(1.6)',delay:.25,clearProps:'transform'}); }
-  stamp('TRADING OPENS','gold',`${ROLE_NAME[P.role]} · ${CFG.BELLS} bells`);
-  setTimeout(()=>{ if(G.mode==='play') toast({law:'Get to the bank before the gang blows the vault.',outlaw:'The gang hits Silver Creek at 0:45. Be ready.',prospector:'Your claim is north of town. Press E there to dig.',hunter:'Check the bounty board at the sheriff’s office.'}[P.role],''); },1800);
 }
 function newWorld(role,attract){
   G.actors=[]; G.piles=[]; G.shots=[]; G.decals=[]; FX.length=0; G.t=0; G.bells=0; G.nextBell=CFG.BELL; G.gold=5.2; G.goldOpen=5.2; G.goldHist=[]; G.dayOver=false; G.paused=false; G.trauma=0; G.flash=0; G.slowmo=1; G.histT=0;
+  for(const T of WORLD.towns) T.claim.rich=1;
   makeBanks(); makePlayer(role); P.active=!attract; spawnBots(); AP.target=null;
 }
 function roleOfDay(){ const rt=P.stats.roleTime; return Object.keys(rt).sort((a,b)=>rt[b]-rt[a])[0]; }
@@ -2016,7 +2078,9 @@ function apRole(role,dt){
   if(role==='law'){
     const b=soonestBank(),T=b.T;
     if(P.carried>=40&&!b.raidOn&&b.nextRaid-G.t>8&&!b.frozen){ apDeposit(); return; }
-    if(b.raidOn){ apGo(T.guard[0].x+20,T.guard[0].y+10,12); const c=playerContext(); if(c&&c.id==='catch') apUse(); return; }
+    if(b.raidOn){ const c=playerContext(); if(c&&c.id==='catch'){ apUse(); return; }
+      const raider=G.actors.find(a=>a.kind==='outlaw'&&a.alive&&a.home===b.i&&(a.state==='raid'||a.state==='flee')&&dist2(a.x,a.y,T.hole.x,T.hole.y)<260*260);
+      if(raider){ AP.goal=null; apGo(raider.x,raider.y,6); } else apGo(T.guard[0].x+20,T.guard[0].y+10,12); return; }
     if(b.nextRaid-G.t<5){ apGo(T.b.bank.door.x-20,T.b.bank.door.y,14); return; }
     const tgt=G.actors.find(a=>a.kind==='outlaw'&&a.alive&&a.stars>0&&dist2(a.x,a.y,P.x,P.y)<380*380);
     if(tgt){ apGo(tgt.x,tgt.y,10); AP.goal=null; const c=playerContext(); if(c&&c.id==='catch') apUse(); return; }
@@ -2032,7 +2096,9 @@ function apRole(role,dt){
     apGo(T.hole.x+40,T.hole.y+195,20); return;
   }
   if(role==='prospector'){
-    const T=WORLD.towns[0],c=T.claim;
+    let T=WORLD.towns[AP.claimTown||0],c=T.claim;
+    if(c.rich<.45&&!AP.switching){ AP.claimTown=1-(AP.claimTown||0); AP.switching=true; P.mining=false; T=WORLD.towns[AP.claimTown]; c=T.claim; }
+    if(c.rich>.6) AP.switching=false;
     if(P.carried>=90&&!P.mining){ apDeposit(); return; }
     if(P.carried>=90&&P.mining){ P.mining=false; }
     if(apGo(c.x,c.y+10,14)){ if(!P.mining) apUse(); } return;

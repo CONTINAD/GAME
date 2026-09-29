@@ -17,15 +17,16 @@ Automated test: `cd tests && npm install && npm run playtest` (plays two minutes
 - [~] Phone play: touch joystick, context action button, portrait + landscape layouts verified in screenshots. Adaptive quality drops resolution if frames sag. Not measured on a real mid-range phone yet.
 - [x] Balance: headless bot-only sims (`BR.simDay(role)`), four roles within about 25% of each other; stocks swing 20-130% of open without breaking (floor at 22%).
 - [x] Zero console errors; `tests/playtest.mjs` plays 2 minutes (keyboard walk + deposit, then all four jobs) and passes.
-- [ ] First-time-player review by a subagent, top 3 complaints fixed.
+- [x] First-time-player review by a subagent. Top 3 fixed: (1) roles were passive/AFK-able, so lawmen now cuff raiders and claims thin out; (2) unseen punishment, so the blast radius shows during the fuse and dying keeps half your clean gold; (3) walled-off hideout, now opened toward town, with a target arrow everywhere.
+- [x] Decluttered HUD after player feedback: one stock price, one objective line with an arrow to the target, money + health, stars only when wanted.
 
 ## Balance log (average of 4 simulated days per role, autopilot player)
 
 | Role | Score | Notes |
 | --- | --- | --- |
-| Lawman | 669 | ~7 defenses/day across both towns |
-| Outlaw | 685 | ~$800 fenced, ~1 death/day |
-| Prospector | 656 | ~$525 mined |
-| Bounty hunter | 485, then bounty per star raised 22 → 27 | ~6 catches/day |
+| Lawman | 813 | ~6 defenses/day; a defended bank's stock climbs, so shares carry the lawman |
+| Outlaw | 653 | ~$730 fenced, ~1 death/day |
+| Prospector | 518 (before a small claim buff) | switches claims as veins thin |
+| Bounty hunter | 569 | ~6 catches/day |
 
 Out of scope on purpose (from BankRun_ClaudePrompts.md): servers, accounts, wallets, coin, seasons, ranks, gold train, Boot Hill, uplisting.
