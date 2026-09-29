@@ -57,8 +57,22 @@ in the past (see the bottom of this file).
 The name describes the mechanic. If everyone runs to cash out at once, the
 price crashes for everybody.
 
-**Genre:** Top-down 2D extraction game in the browser, 20–40 players, about
-10-minute rounds.
+**Genre:** Top-down 2D extraction game in the browser. It works with anywhere
+from 10 to 200 players.
+
+**Scaling from 10 to 200 players:**
+- **Drop-in servers, no lobby wait** (like agar.io). Join any time and leave
+  any time. There's no waiting for 200 people to fill up a match.
+- **One global market.** Every server shares the same coin price. A room with
+  10 players still feels the crash when 150 people on other servers cash out.
+- **The map grows and shrinks** with the player count. More players open more
+  zones, rigs and terminals, so 10 players still run into each other.
+- **Sell pressure is a percentage** of all coin being held, not a raw amount,
+  so the price behaves the same at any player count.
+- **Bots fill in** when servers are nearly empty (Fortnite and Fall Guys do
+  this).
+- **200 per server:** each player only receives updates about what's near
+  them, which keeps it smooth in a browser.
 
 **Loop:**
 1. Drop in with nothing and collect coin from mining rigs, crates and players
@@ -71,7 +85,8 @@ price crashes for everybody.
 **What moves the price:**
 - **Sell pressure:** mass cash-outs crash the price (the bank run).
 - **Market events:** a sudden spike or a flash crash, announced to everyone.
-- **Upward drift** over the match, so holding pays, if you survive.
+- **Upward drift** through each global market cycle (a short "trading day" that
+  ends at the closing bell), so holding pays, if you survive.
 
 **Why you have to hold:**
 - The longer you carry without selling, the bigger your payout multiplier.
@@ -124,23 +139,30 @@ doesn't last.)*
 ```
 Write a complete, buildable game design document for a multiplayer browser game called "Bank Run".
 
-CONCEPT: Top-down 2D extraction game. 20-40 players per match, ~10 minute rounds. Players collect an in-game coin whose price swings like a stock on ONE shared live chart everyone sees. Carried coin is dropped if you get knocked out. You must reach an extraction terminal to sell at the current price; sold coin becomes banked season net worth. The name is the core mechanic: if many players cash out at once, sell pressure crashes the price for everyone. Core tension: sell early (safe, small) vs. hold (bigger payout, risk of a crash or getting hunted).
+CONCEPT: Top-down 2D extraction game. Must work with anywhere from 10 to 200 players on a server. Drop-in/drop-out servers like agar.io (no lobby waiting); join any time. Players collect an in-game coin whose price swings like a stock on ONE shared live chart everyone sees. Carried coin is dropped if you get knocked out. You must reach an extraction terminal to sell at the current price; sold coin becomes banked season net worth. The name is the core mechanic: if many players cash out at once, sell pressure crashes the price for everyone. Core tension: sell early (safe, small) vs. hold (bigger payout, risk of a crash or getting hunted).
 
 REFERENCES: ARC Raiders and Escape from Tarkov (extraction risk), Hunt: Showdown (bounty carriers are revealed on the map), agar.io (instant browser play, no signup, simple to learn but deep), Among Us (moments that make good streamer clips).
 
+SCALING (10 to 200 players):
+- ONE global coin price shared by every server, so small servers still feel the whole market.
+- Map expands/contracts with player count (more zones, rigs, terminals open as players join). Give the exact formula.
+- Sell pressure measured as a percentage of all held coin, not a raw amount, so the price behaves the same at any player count.
+- Bots fill servers below a minimum player count. Give the threshold and bot behavior.
+- Network plan for 200 players per server in a browser: server tick rate, and each player only receives updates for entities near them.
+
 REQUIRED MECHANICS:
-- Price model: sell pressure from cash-outs lowers price; random market events (sudden spike, flash crash) announced to all players; upward drift over the match. Give an exact formula and tick rate.
+- Price model: sell pressure from cash-outs lowers price; random market events (sudden spike, flash crash) announced to all players; upward drift through each global market cycle (a short "trading day" shared by all servers, ending at a closing bell). Give an exact formula, cycle length, and tick rate.
 - Hold multiplier: bonus for carrying longer without selling. Exact numbers.
 - Reveal: players carrying big bags are revealed on the minimap. Exact thresholds.
 - Coin sources: mining rigs, loot crates, knocked-out players. Spawn rates and amounts.
 - Combat: simple (e.g., shoot + dash), easy to learn. Health, damage, cooldowns.
-- Extraction terminals: count, placement, and whether they open/close during the match.
+- Extraction terminals: count, placement, and whether they open/close during each market cycle.
 - Season: net-worth leaderboard; the top players win real tech prizes (skill-based, no purchase required). Prizes are few and large, not split thin.
 - In-game coin only. NO real-money purchases, crypto, or NFTs in version 1. Nothing money can buy may affect winning.
 
 DELIVER:
 1. One-paragraph pitch
-2. Match flow minute by minute
+2. Session flow: what a typical drop-in session looks like, and how a market cycle plays out minute by minute
 3. Controls (keyboard/mouse + mobile touch)
 4. Map layout (size, zones, terminal and rig placement)
 5. Full economy with exact numbers and the price formula
