@@ -7,7 +7,7 @@ Automated test: `cd tests && npm install && npm run playtest` (plays two minutes
 
 - [x] Prompt 1: the loop. One town, WASD + E, carried vs bank gold, K to die and drop gold, deposit/withdraw, raid every 45 s for 20 s, stock and deposits drop by the percent stolen, Law/Outlaw buttons, lawman share when the vault ends over half, hot gold fenced at the hideout east of town, 4 outlaw + 2 lawman bots per town.
 - [x] Prompt 2: the look. Sandy ochre ground, red-brick bank, navy lawmen with silver stars, black-and-red-bandana outlaws, bright gold, brown wood, white church, top ticker with green/red arrows, 5-bullet health, 5 wanted stars with a minimap marker at 3+.
-- [x] Prompt 3: prospector claim north of each town (1 oz every 3 s at the gold price), bounty board at the sheriff (pay = stars), closing bell every 60 s with dividends for unrobbed banks, bank run at 40% withdrawals (crash + deposit freeze until the bell).
+- [x] Prompt 3: prospector claim north of each town (1 oz every 2 s at the gold price, vein thins with use), bounty board at the sheriff (pay = stars), closing bell every 60 s with dividends for unrobbed banks, bank run at 40% withdrawals (crash + deposit freeze until the bell).
 - [x] Prompt 4: Red Rock, a second town on a dirt road with its own cheaper stock (RRT) and its own raid timer.
 - [x] Title screen with job picker, 30-second how-to (auto-shown on first ride), Frontier Gazette results screen, local high scores.
 - [x] Scored 6-minute trading day (6 bells). Goals: lawman holds 3 raids, outlaw fences $250, prospector mines $250, hunter brings in 4. Score = net worth + $150 per goal met.
