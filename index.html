@@ -449,7 +449,7 @@ body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px
       <p class="tagline">Every bank in the territory is a stock. Guard the vault, rob it, dig for gold, or hunt the men who did.</p>
       <div class="rolepick" id="rolepick">
         <button class="rcard paper" data-role="law" aria-pressed="true"><svg class="ic" style="color:var(--navy)"><use href="#i-law"/></svg><h2>Lawman</h2><p>Hold the vault above half when the gang blows it open. Earn shares.</p><span class="g">Goal: hold 3 raids</span></button>
-        <button class="rcard paper" data-role="outlaw" aria-pressed="false"><svg class="ic" style="color:var(--bandana)"><use href="#i-outlaw"/></svg><h2>Outlaw</h2><p>Grab sacks from the open vault, outrun the law, fence it at the hideout.</p><span class="g">Goal: fence $400</span></button>
+        <button class="rcard paper" data-role="outlaw" aria-pressed="false"><svg class="ic" style="color:var(--bandana)"><use href="#i-outlaw"/></svg><h2>Outlaw</h2><p>Grab sacks from the open vault, outrun the law, fence it at the hideout.</p><span class="g">Goal: fence $250</span></button>
         <button class="rcard paper" data-role="prospector" aria-pressed="false"><svg class="ic" style="color:#6b4a22"><use href="#i-pick"/></svg><h2>Prospector</h2><p>Work the claim north of town. Every ounce sells at the gold price.</p><span class="g">Goal: mine $250</span></button>
         <button class="rcard paper" data-role="hunter" aria-pressed="false"><svg class="ic" style="color:#7a2b1c"><use href="#i-hunter"/></svg><h2>Bounty Hunter</h2><p>Run down outlaws with stars. More stars, bigger pay.</p><span class="g">Goal: 4 bounties</span></button>
       </div>
@@ -525,12 +525,12 @@ const CFG={
   BELL:60, BELLS:6,
   SACK_PCT:.08, STUFF_P:1.0, STUFF_B:1.9, MAX_SACKS:4, BOT_SACKS:3, SACK_SLOW:.08,
   RUN_PCT:.40, RUN_CRASH:.35, DIVIDEND:1,
-  MINE_EVERY:3, BOUNTY_STAR:24, DEFENSE_PAY:10,
+  MINE_EVERY:2, BOUNTY_STAR:24, DEFENSE_PAY:10,
   START_GOLD:30, WHISKEY:4, HORSE:5, HORSE_T:22,
   P_SPEED:165, BOT_SPEED:120, FOLK_SPEED:78, HORSE_MUL:1.55,
   LAW_RANGE:255, LAW_AIM:.55, LAW_COOL:1.8, LAW_HITR:15,
   STAR_WAIT:12, STAR_DECAY:9,
-  GOALS:{law:3,outlaw:400,prospector:250,hunter:4}, GOAL_BONUS:150,
+  GOALS:{law:3,outlaw:250,prospector:250,hunter:4}, GOAL_BONUS:150,
 };
 const ROLE_NAME={law:'Lawman',outlaw:'Outlaw',prospector:'Prospector',hunter:'Bounty Hunter'};
 
@@ -739,6 +739,7 @@ function startRaid(b){
 }
 function endRaid(b){
   b.raidOn=false; b.nextRaid+=CFG.RAID_EVERY[b.i]; b.repair=2.5;
+  for(const o of G.banks) if(o!==b){ const oe=o.raidOn?o.raidEnd:o.nextRaid; if(Math.abs(b.nextRaid-oe)<28) b.nextRaid=oe+28; } // one vault open at a time
   const pct=b.stolen/Math.max(1,b.startVault), held=b.vault>b.startVault*.5;
   if(held) b.held++; else b.cycleRobbed=true;
   if(b.stolen>0) b.panic+=b.stolen*rnd(.8,1.3)*(held?.35:1.1);
@@ -846,14 +847,14 @@ function playerUse(){
     case 'grab': if(P.stuff<=0){ P.stuff=.0001; emit('stuffStart'); } break;
     case 'catch': catchOutlaw(c.target); break;
     case 'fence': { const v=P.hot; P.carried+=v; P.stats.fenced+=v; P.hot=0; P.sacks=0; emit('fence',v); emit('tape',`HIDEOUT FENCE MOVES ${money(v)} OF HOT GOLD`,''); break; }
-    case 'mine': if(!P.mining){ P.mining=true; P.mineT=0; emit('toast','You swing the pick. One ounce every 3 seconds.','good'); } break;
+    case 'mine': if(!P.mining){ P.mining=true; P.mineT=0; emit('toast','You swing the pick. One ounce every 2 seconds.','good'); } break;
     case 'saloon': if(P.hp>=5) emit('toast','You’re already steady on your feet.','bad'); else if(P.carried<CFG.WHISKEY) emit('toast','Not enough gold for whiskey.','bad'); else { P.carried-=CFG.WHISKEY; P.hp=Math.min(5,P.hp+2); emit('heal'); } break;
     case 'stables': if(P.carried<CFG.HORSE) emit('toast','Not enough gold for a horse.','bad'); else { P.carried-=CFG.HORSE; P.horse=CFG.HORSE_T; emit('horse'); } break;
     default: emit('panel',c.id,c.b);
   }
 }
 function catchOutlaw(a){
-  const pay=Math.round(Math.max(1,a.stars)*CFG.BOUNTY_STAR*(P.role==='law'?.25:1));
+  const pay=Math.round(Math.max(1,a.stars)*CFG.BOUNTY_STAR*(P.role==='law'?.1:1));
   P.carried+=pay; if(P.role==='law') P.stats.cuffs=(P.stats.cuffs||0)+1; else P.stats.bounties++; P.stats.bountyPay+=pay;
   if(a.hot>0&&a.origin>=0){ G.banks[a.origin].vault+=a.hot; }
   emit('bounty',a,pay); emit('tape',`OUTLAW BROUGHT IN · ${'★'.repeat(a.stars)} · BOUNTY ${money(pay)} PAID`,'good');
@@ -2028,7 +2029,7 @@ function newWorld(role,attract){
 function roleOfDay(){ const rt=P.stats.roleTime; return Object.keys(rt).sort((a,b)=>rt[b]-rt[a])[0]; }
 function dayResults(){
   const s=P.stats,g=CFG.GOALS, worth=netWorth();
-  const goals=[['law','Hold 3 raids as a lawman',s.defenses,g.law,v=>v],['outlaw','Fence $400 of hot gold',s.fenced,g.outlaw,money],['prospector','Mine $250 of gold',s.mined,g.prospector,money],['hunter','Bring in 4 outlaws',s.bounties,g.hunter,v=>v]]
+  const goals=[['law','Hold 3 raids as a lawman',s.defenses,g.law,v=>v],['outlaw','Fence $250 of hot gold',s.fenced,g.outlaw,money],['prospector','Mine $250 of gold',s.mined,g.prospector,money],['hunter','Bring in 4 outlaws',s.bounties,g.hunter,v=>v]]
     .map(([r,label,v,t,f])=>({r,label,v,t,f,ok:v>=t}));
   const bonus=goals.filter(x=>x.ok).length*CFG.GOAL_BONUS, score=Math.round(worth+bonus);
   return {worth,bonus,score,goals,role:roleOfDay()};
@@ -2157,7 +2158,7 @@ function boot(){
 
 /* ---------- test / sim hooks ---------- */
 window.BR={
-  get G(){return G}, get P(){return P}, CFG, FPS:()=>FPS,
+  get G(){return G}, get P(){return P}, CFG, collide, WORLD, FPS:()=>FPS,
   start(role){ chosenRole=role||'law'; try{ localStorage.setItem('bankrun.seenHow','1'); }catch(e){} startDay(); },
   autopilot(on,role){ AP.on=!!on; if(role&&P) setRole(role,true); AP.goal=null; },
   speed(k){ G.speed=k; },

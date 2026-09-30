@@ -10,7 +10,7 @@ Automated test: `cd tests && npm install && npm run playtest` (plays two minutes
 - [x] Prompt 3: prospector claim north of each town (1 oz every 3 s at the gold price), bounty board at the sheriff (pay = stars), closing bell every 60 s with dividends for unrobbed banks, bank run at 40% withdrawals (crash + deposit freeze until the bell).
 - [x] Prompt 4: Red Rock, a second town on a dirt road with its own cheaper stock (RRT) and its own raid timer.
 - [x] Title screen with job picker, 30-second how-to (auto-shown on first ride), Frontier Gazette results screen, local high scores.
-- [x] Scored 6-minute trading day (6 bells). Goals: lawman holds 3 raids, outlaw fences $400, prospector mines $250, hunter brings in 4. Score = net worth + $150 per goal met.
+- [x] Scored 6-minute trading day (6 bells). Goals: lawman holds 3 raids, outlaw fences $250, prospector mines $250, hunter brings in 4. Score = net worth + $150 per goal met.
 - [x] Bots feel alive: the gang gathers, plants dynamite, loots, flees the law and fences at the hideout. Lawmen patrol, answer the bell, guard the blast hole, and chase and shoot wanted players. Townsfolk wander and scatter at gunfire.
 - [x] Game feel: trauma screen shake, hit-stop and flash on dynamite, 60 coins bursting from the vault, debris, smoke, drifting dust, tumbleweeds, smooth look-ahead camera with raid zoom, GSAP-animated HUD and ticker, Web Audio SFX (boom, shots, coins, church bell, fuse, cash register).
 - [x] Visuals match bankrun_art (palette, silhouettes, team colours; checked at phone size).
