@@ -41,6 +41,7 @@ button:focus-visible{outline:3px solid var(--brass-hi);outline-offset:2px}
 .screen{scrollbar-color:#8a5a34 rgba(40,20,8,.25);scrollbar-width:thin}
 #app{position:fixed;inset:0;overflow:hidden;touch-action:none}
 #game{position:absolute;inset:0;width:100%;height:100%;display:block;background:var(--sand)}
+#haze{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 110% 90% at 15% -10%,rgba(255,236,190,.28),rgba(255,215,150,.08) 45%,transparent 70%),radial-gradient(ellipse at center,transparent 45%,rgba(70,35,10,.42) 100%)}
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- shared materials ---------- */
@@ -351,6 +352,7 @@ body.touch .bullet{width:9px;height:28px} body.touch .bullet::before{height:11px
 <body>
 <div id="app">
   <canvas id="game" aria-label="Bank Run town view"></canvas>
+  <div id="haze" aria-hidden="true"></div>
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
@@ -1145,7 +1147,7 @@ const MOTES=Array.from({length:70},()=>({x:rnd(0,2000),y:rnd(0,1200),d:rnd(.4,1.
 /* ---------- 8. render ---------- */
 const $=s=>document.querySelector(s);
 const cv=$('#game'), cx=cv.getContext('2d',{alpha:false});
-let VW=800,VH=600,DPR=1,BASEZ=1,S=0,DPR_CAP=2;
+let VW=800,VH=600,DPR=1,BASEZ=1,S=0,DPR_CAP=matchMedia('(pointer: coarse)').matches?1.5:2;
 const CAM={x:900,y:980,z:1,tz:1,sx:0,sy:0};
 const ZOOM=()=>BASEZ*CAM.z;
 const CHUNKS=new Map(), SPR=new Map(); let chunkBudget=0;
@@ -1620,7 +1622,6 @@ function render(){
   // screen space
   cx.setTransform(DPR,0,0,DPR,0,0);
   for(const m of MOTES){ cx.fillStyle=`rgba(255,238,200,${m.a})`; cx.beginPath(); cx.arc(m.x,m.y,m.r,0,TAU); cx.fill(); }
-  if(OVERLAY) cx.drawImage(OVERLAY,0,0,VW,VH);
   drawTargetArrow(Z);
   if(G.flash>0){ cx.fillStyle=`rgba(255,236,200,${G.flash})`; cx.fillRect(0,0,VW,VH); }
 }
