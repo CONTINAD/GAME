@@ -56,11 +56,13 @@ def well():
 def pole():
     c=Cv(20,50); c.rect(9,4,3,46,'#4e3520'); c.vline(10,4,46,'#6b4a2d'); c.rect(1,6,18,2,'#5a3d23'); [c.rect(k,4,2,2,'#b9d0d6') for k in (2,7,12,16)]; c.outline(OL); return c
 def tumble(f):
-    c=Cv(14,14); r=random.Random(3+f)
-    for k in range(40):
-        a=r.random()*6.283; rr=r.random()*5.5; import math
-        c.px(7+math.cos(a+f*.8)*rr,7+math.sin(a+f*.8)*rr*.9,'#8a6a3c' if k%3 else '#b39060')
-    c.outline('#5a3f20'); return c
+    import math
+    c=Cv(14,14); r=random.Random(9)
+    for k in range(9):  # tangled loops of twig
+        a0=r.random()*6.283+f*.6; rx=3+r.random()*3; ry=2+r.random()*3
+        for t in range(24):
+            a=a0+t*.262; c.px(7+math.cos(a)*rx*math.cos(k)+math.sin(a)*ry*.4,7+math.sin(a)*ry,'#9a7646' if (k+t)%3 else '#c49e64')
+    return c
 def horse(f):
     c=Cv(36,28); leg=[0,2,0,-2][f]
     for lx,o in [(8,leg),(12,-leg),(24,-leg),(28,leg)]: c.rect(lx+o,16,3,10,'#4e2e18'); c.rect(lx+o,25,3,2,'#2a180c')
@@ -85,6 +87,24 @@ def tuft(seed):
     for k in range(5): c.line(4,5,1+k*2+r.randrange(-1,1),r.randrange(0,3),'#8a8a45' if k%2 else '#a39c58')
     return c
 def sage(seed):
-    c=Cv(12,8); r=random.Random(seed)
-    for k in range(5): c.ellipse(3+r.randrange(6),2+r.randrange(4),2.5,2,'#8e9669' if k%2 else '#a4aa7c')
-    c.outline('#6a6e4a'); return c
+    # low desert shrub: dark core, lighter leaf clusters on the lit side, no outline (sits in the ground)
+    c=Cv(14,9); r=random.Random(seed)
+    for k in range(9):
+        x=2+r.randrange(10); y=2+r.randrange(5); c.ellipse(x,y,2,1.6,'#6f7a4c')
+    for k in range(7):
+        x=2+r.randrange(9); y=1+r.randrange(4); c.px(x,y,'#9aa56c'); c.px(x+1,y,'#b4bc84')
+    c.hline(3,8,8,'#5e5136'); return c
+def mine():
+    # rocky hill with a timbered adit, ore-cart rails running out to the claim, tailings heap
+    W,H=100,110; c=Cv(W,H); r=random.Random(21)
+    c.ellipse(50,34,46,30,'#8e5a36'); c.ellipse(46,28,40,24,'#a8784b'); c.ellipse(40,22,28,15,'#bd8b58')
+    for _ in range(26): x=10+r.randrange(80); y=8+r.randrange(48); c.ellipse(x,y,1.5+r.random()*2.5,1.2+r.random()*1.6,r.choice(['#8e6038','#7a4c2a','#c99a66']),only='opaque')
+    c.rect(38,40,24,22,'#1c120a'); c.rect(40,44,20,18,'#0e0905')
+    c.rect(35,38,4,25,'#6b4527'); c.rect(61,38,4,25,'#6b4527'); c.rect(33,35,34,4,'#7d5433'); c.hline(33,35,34,'#9b7048')
+    c.vline(36,39,24,'#8a6038'); c.vline(62,39,24,'#8a6038')
+    for yy in range(63,106,4): c.hline(43,yy,14,'#7a5a3a')
+    c.vline(45,62,44,'#5e4a36'); c.vline(54,62,44,'#5e4a36')
+    c.ellipse(80,68,15,9,'#9c8a74'); c.ellipse(78,65,10,6,'#b5a48b')
+    c.rect(65,74,10,6,'#5b3b21'); c.rect(64,72,12,3,'#7d5433'); c.px(66,80,'#2a1a10'); c.px(73,80,'#2a1a10')
+    for x,y in ((18,78),(82,78),(18,104),(82,104)): c.rect(x,y,3,4,'#6b4527')
+    return c

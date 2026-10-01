@@ -11,10 +11,10 @@ for n,L in LOOKS.items():
 for k in range(1,6): S[f'sack{k}']=sack(k)
 B={'bank':(125,100),'saloon':(120,110),'sheriff':(95,90),'telegraph':(75,80),'stables':(115,85),'church':(85,115)}
 for k,(w,h) in B.items(): S['b_'+k]=getattr(bld,k)(w,h)
-S['annex']=bld.annex_closed(52,70); S['annex_b']=bld.annex_closed(52,70,True)
+S['annex']=bld.annex_closed(52,70); S['annex_b']=bld.annex_closed(52,70,True); S['annex_floor']=bld.annex_floor(52,70); S['annex_wn']=bld.annex_wall(52,True); S['annex_ws']=bld.annex_wall(52,False)
 P=props
 S['barrel']=P.barrel(); S['crate']=P.crate(); S['trough_v']=P.trough(11,26); S['trough_h']=P.trough(26,10)
-S['hitch']=P.hitch(); S['lamp']=P.lamp(); S['tent']=P.tent(); S['wagon']=P.wagon(); S['wagonH']=P.wagon(True); S['well']=P.well(); S['pole']=P.pole(); S['dyn']=P.dyn()
+S['hitch']=P.hitch(); S['lamp']=P.lamp(); S['tent']=P.tent(); S['wagon']=P.wagon(); S['wagonH']=P.wagon(True); S['well']=P.well(); S['pole']=P.pole(); S['dyn']=P.dyn(); S['mine']=P.mine()
 for i in range(4): S[f'saguaro{i}']=P.saguaro(i*7+1); S[f'tumble{i}']=P.tumble(i); S[f'horse{i}']=P.horse(i); S[f'coin{i}']=P.coin(i)
 for i in range(3): S[f'pear{i}']=P.pear(i*5+2); S[f'tuft{i}']=P.tuft(i); S[f'sage{i}']=P.sage(i)
 for s in range(6,13): S[f'rock{s}']=P.rock(s,s)

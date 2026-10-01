@@ -194,3 +194,22 @@ def annex_closed(W,Hh,boards=False):
         for k in range(4):
             y=y0+14+k*9; c.rect(W-16,y,18,4,'#8a5e37'); c.hline(W-16,y,18,'#a87a4a'); c.px(W-14,y+2,'#3b2a1c'); c.px(W,y+2,'#3b2a1c')
     return c
+def annex_floor(W,Hh):
+    c=Cv(W,Hh); c.rect(0,0,W,Hh,'#4f4a44')
+    for yy in range(0,Hh,7): c.hline(0,yy,W,'#3e3a35')
+    for rr,yy in enumerate(range(0,Hh,7)):
+        for xx in range(3 if rr%2 else 0,W,9): c.vline(xx,yy,7,'#3e3a35')
+    c.noise(0,0,W,Hh,'#5c5650',.1,4)
+    # round vault door swung open on the west wall
+    c.ellipse(5,Hh//2,4,14,'#2b2d30'); c.ellipse(10,Hh//2-2,4,12,'#8d949b'); c.ellipse(9,Hh//2-3,2,6,'#c4cbd1'); c.px(11,Hh//2-2,'#5a6068')
+    # rubble spilling out of the blast hole (east)
+    r=random.Random(3)
+    for _ in range(40): x=W-10+r.randrange(10); y=8+r.randrange(Hh-16); c.rect(x,y,2+r.randrange(2),2,r.choice(['#8f8a82','#6f6a63','#a8a198']))
+    return c
+def annex_wall(W,top=True):
+    h=12; c=Cv(W,h); w=W-9 if top else W-13
+    c.rect(0,0,w,5,'#9e998f'); c.hline(0,0,w,'#c8c3b8'); c.rect(0,5,w,h-5,'#7d786f')
+    for yy in range(5,h,3): c.hline(0,yy,w,'#67635b')
+    r=random.Random(11 if top else 12)
+    for k in range(5): c.rect(w-1+k*2-r.randrange(2),r.randrange(h-3),2+r.randrange(2),2+r.randrange(2),'#8a857b')
+    return c
